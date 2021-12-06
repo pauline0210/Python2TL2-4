@@ -1,7 +1,7 @@
 import socket
 
 from lib.mvp.client import Client
-from lib.mvp.server import Server, ServerInstance
+from lib.mvp.server import Server
 import threading
 
 

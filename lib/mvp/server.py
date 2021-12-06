@@ -5,7 +5,7 @@ import pickle
 import socket
 import struct
 import threading
-from server_instance import ServerInstance
+from .server_instance import ServerInstance
 
 
 class Server:
