@@ -28,3 +28,10 @@ class DataReceiver:
     def stop_receiving(self):
         self.receiver_socket.close()
         self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    def thread(self):
+        self.socket_binding()
+        self.socket_listening()
+        print(f"LISTENING AT: {self.socket_address}")
+        self.client_socket, self.address = self.socket_connected()
+        print(f"GOT CONNECTION FROM:{self.address}")

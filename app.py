@@ -42,9 +42,9 @@ class Main(App, Widget):
         return self
 
     def stop_app(self, *args):
-        self.sender.stop_send_data()
+        self.client_socket, self.address = None, None
         self.receiver.stop_receiving()
-        self.image = self.ids.img
+        self.sender.stop_send_data()
 
     def data_receiver(self, *args):
         self.receiver.socket_binding()
@@ -81,7 +81,7 @@ class Main(App, Widget):
             else:
                 pass
         except:
-            print("ERROR")
+            print("ERROR APP")
             self.client_socket.close()
             self.client_socket = None
 
@@ -102,3 +102,6 @@ class Main(App, Widget):
 
     def call(self):
         threading.Thread(target=self.sender.thread).start()
+
+    def serv(self):
+        threading.Thread(target=self.data_receiver).start()

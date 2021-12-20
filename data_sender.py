@@ -1,4 +1,3 @@
-
 import cv2
 import pickle
 import socket
@@ -11,6 +10,7 @@ class DataSender:
     TODO: Documentation sur la classe Client
     C'est le ficher data_sender.py mais en classe le fonctionnement est pareil
     """
+
     def __init__(self, ip, film=0, port=9999):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host_ip = ip
@@ -35,16 +35,13 @@ class DataSender:
                     message = struct.pack("Q", len(a)) + a
                     self.client_socket.sendall(message)
                 except Exception:
-                    print("VIDEO TERMINATED")
-                    self.client_socket.close()
+                    self.stop_send_data()
                     break
-            print("Video ended")
-            self.client_socket.close()
 
     def stop_send_data(self):
+        self.vid = None
         self.client_socket.close()
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.vid = None
 
     def thread(self):
         if self.vid is None:
