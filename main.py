@@ -1,4 +1,3 @@
-import socket
 
 from lib.mvp.client import Client
 from lib.mvp.server import Server
@@ -22,8 +21,9 @@ if __name__ == "__main__":
     """
     C'est ici qu'on lance "l'appel". ça lance 2 threads de chaque classe. Faut juste correctement mettre les ip.
     """
-    server_thread = threading.Thread(target=server, args=("10.99.1.198",))
-    server_thread.start()
+    server_thread = threading.Thread(target=server, args=('192.168.0.194',)).start()
+    threading.Thread(target=client, args=('192.168.0.194',)).start()
 
-    client_thread = threading.Thread(target=client, args=("10.99.1.198",))
-    client_thread.start()
+    # helloKivy = HelloKivy()
+    # server_thread = helloKivy.run()
+    # server_thread.start()
