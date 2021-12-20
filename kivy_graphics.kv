@@ -1,0 +1,19 @@
+<Main>
+
+	BoxLayout:
+	    orientation: 'vertical'
+	    size: root.width, root.height
+		Button:
+			text: "Launch server"
+			font_size: 32
+			on_press: root.data_receiver()
+		Button:
+			text: "Stop server"
+			font_size: 32
+			on_press: root.stop_app()
+		Button:
+			text: "Call"
+			font_size: 32
+			on_press: root.call()
+		Image:
+		    id: img
