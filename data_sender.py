@@ -15,7 +15,7 @@ class DataSender:
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host_ip = ip
         self.port = port
-        self.vid = cv2.VideoCapture('town.mp4')
+        self.vid = cv2.VideoCapture(0)
 
     @property
     def socket_address(self):
@@ -48,6 +48,6 @@ class DataSender:
 
     def thread(self):
         if self.vid is None:
-            self.vid = cv2.VideoCapture('town.mp4')
+            self.vid = cv2.VideoCapture(0)
         self.connect_to_receiver()
         self.send_data()
