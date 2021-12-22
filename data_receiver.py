@@ -20,7 +20,6 @@ class DataReceiver:
 
     def socket_listening(self):
         self.receiver_socket.listen()
-        print("LISTENING AT:", self.socket_address)
 
     def socket_connected(self):
         return self.receiver_socket.accept()

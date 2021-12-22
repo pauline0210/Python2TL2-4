@@ -1,3 +1,4 @@
+import socket
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
@@ -10,6 +11,7 @@ import struct
 import pickle
 from data_sender import DataSender
 from data_receiver import DataReceiver
+from kivy.properties import ObjectProperty
 
 Builder.load_file("kivy_graphics.kv")
 
@@ -19,6 +21,7 @@ class Main(App, Widget):
     Classe principale de l'application. C'est ici que l'interface se construit et que la réception des données sera
     faite.
     """
+    inputted_ip = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         """
@@ -26,25 +29,32 @@ class Main(App, Widget):
         :param kwargs: héritage de la classe App
         """
         super().__init__(**kwargs)
-        self.receiver = DataReceiver()
-        # METTRE LA BONNE IP ICI 94.108.253.25
-        self.sender = DataSender('192.168.56.1')
+        self.receiver = None
+        self.sender = None
+        self.selected_ip = None
         self.client_socket, self.address = None, None
         self.image = self.ids.img
+        self.face = self.ids.face
 
     def build(self):
         """
         Construction de l'interface graphique kivy.
         :return:
         """
+        self.inputted_ip.text = socket.gethostbyname(socket.gethostname())
         # opencv2 stuffs
         Clock.schedule_interval(self.show_client, 1 / 64)
         return self
 
     def stop_app(self, *args):
-        self.client_socket, self.address = None, None
         self.receiver.stop_receiving()
         self.sender.stop_send_data()
+        self.client_socket, self.address = None, None
+
+        def reset_webcam(*args):
+            self.image.texture = None
+
+        Clock.schedule_once(reset_webcam)
 
     def data_receiver(self, *args):
         self.receiver.socket_binding()
@@ -100,8 +110,20 @@ class Main(App, Widget):
         # actually put the texture in the kivy Image widget
         self.image.texture = texture
 
-    def call(self):
-        threading.Thread(target=self.sender.thread).start()
+    def set_ip(self):
+        self.selected_ip = self.inputted_ip.text
+        print(self.selected_ip)
 
-    def serv(self):
+    def call(self):
+        self.sender = DataSender(self.selected_ip)
+        self.receiver = DataReceiver()
+        threading.Thread(target=self.sender.thread).start()
         threading.Thread(target=self.data_receiver).start()
+        # Clock.schedule_interval(self.load_vid, 1/64)
+
+
+"""    def load_vid(self, *args):
+        ret, frame = self.sender.vid.read()
+        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(cv2.flip(frame, 0).tobytes(), colorfmt='bgr', bufferfmt='ubyte')
+        self.face.texture = texture"""
