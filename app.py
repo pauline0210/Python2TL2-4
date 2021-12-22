@@ -27,8 +27,8 @@ class Main(App, Widget):
         """
         super().__init__(**kwargs)
         self.receiver = DataReceiver()
-        # METTRE LA BONNE IP ICI
-        self.sender = DataSender('130.104.210.148')
+        # METTRE LA BONNE IP ICI 94.108.253.25
+        self.sender = DataSender('192.168.56.1')
         self.client_socket, self.address = None, None
         self.image = self.ids.img
 

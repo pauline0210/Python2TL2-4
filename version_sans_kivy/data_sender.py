@@ -26,25 +26,25 @@ class DataSender:
 
     def send_data(self):
         if self.client_socket:
-            print("Send video...")
-            while self.vid.isOpened():
-                try:
+            print("SENDING VIDEO FEED")
+            try:
+                while self.vid.isOpened():
                     img, frame = self.vid.read()
                     frame = imutils.resize(frame, width=320)
                     a = pickle.dumps(frame)
                     message = struct.pack("Q", len(a)) + a
                     self.client_socket.sendall(message)
-                except Exception:
-                    self.stop_send_data()
-                    break
-
-    def stop_send_data(self):
-        self.vid = None
-        self.client_socket.close()
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    cv2.imshow("Sending...", frame)
+                    key = cv2.waitKey(1)
+                    if key == ord('q'):
+                        self.client_socket.close()
+                        break
+                self.vid = None
+            except:
+                print("CLIENT ERROR")
+                self.client_socket.close()
+                self.vid = None
 
     def thread(self):
-        if self.vid is None:
-            self.vid = cv2.VideoCapture(0)
         self.connect_to_receiver()
         self.send_data()

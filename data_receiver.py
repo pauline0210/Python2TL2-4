@@ -5,10 +5,10 @@ class DataReceiver:
     """
     ToDo
     """
-    def __init__(self, port=9999):
+    def __init__(self):
         self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host_ip = socket.gethostbyname(socket.gethostname())
-        self.port = port
+        self.port = 9999
         self.client_socket, self.address = None, None
 
     @property
