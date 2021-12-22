@@ -11,7 +11,7 @@ class DataSender:
     C'est le ficher data_sender.py mais en classe le fonctionnement est pareil
     """
 
-    def __init__(self, ip):
+    def __init__(self, ip=None):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host_ip = ip
         self.port = 9999

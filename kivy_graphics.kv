@@ -3,30 +3,32 @@
     inputted_ip: ip
 
     GridLayout:
-        cols: 2
+        cols: 1
         size: root.width, root.height
 
         Image:
             id: img
 
-        BoxLayout:
-            orientation: 'vertical'
-            Button:
-                text: "Set ip"
-                on_press: root.set_ip()
-                font_size: 32
-            TextInput:
-                text: "xxx.xxx.xxx.xxx"
-                font_size: 26
-                id : ip
-                multiline: False
-        BoxLayout:
-            orientation: 'vertical'
-            Button:
-                text: "Stop calling"
-                font_size: 32
-                on_press: root.stop_app()
-            Button:
-                text: "Call"
-                font_size: 32
-                on_press: root.call()
+        GridLayout:
+            cols: 2
+            BoxLayout:
+                orientation: 'vertical'
+                Button:
+                    text: "Set ip"
+                    on_press: root.set_ip()
+                    font_size: 32
+                TextInput:
+                    text: "xxx.xxx.xxx.xxx"
+                    font_size: 26
+                    id : ip
+                    multiline: False
+            BoxLayout:
+                orientation: 'vertical'
+                Button:
+                    text: "Stop calling"
+                    font_size: 32
+                    on_press: root.stop_app()
+                Button:
+                    text: "Call"
+                    font_size: 32
+                    on_press: root.call()

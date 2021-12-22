@@ -34,7 +34,6 @@ class Main(App, Widget):
         self.selected_ip = None
         self.client_socket, self.address = None, None
         self.image = self.ids.img
-        self.face = self.ids.face
 
     def build(self):
         """
