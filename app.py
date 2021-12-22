@@ -27,6 +27,12 @@ class Main(App, Widget):
         """
         Initialisation des attributs qui serviront plus tard pour la réception des données.
         :param kwargs: héritage de la classe App
+        :self.receiver: initialisé à None, sera un objet DataReceiver par après
+        :self.sender: initialisé à None, sera un objet DataSender par après
+        :self.selected_ip: initialisé à None, l'adresse ip choisie par l'utilisateur
+        :self.client_socket: initialisé à None, le socket qui s'est connecté
+        :self.address: initialisé à None, l'adresse du socket qui s'est connecté
+        :self.image: l'endroit où sera affiché la webcam
         """
         super().__init__(**kwargs)
         self.receiver = None
@@ -38,7 +44,7 @@ class Main(App, Widget):
     def build(self):
         """
         Construction de l'interface graphique kivy.
-        :return:
+        :return: l'affichage graphique selon le fichier .kv chargé au préalable
         """
         self.inputted_ip.text = socket.gethostbyname(socket.gethostname())
         # opencv2 stuffs
@@ -46,6 +52,11 @@ class Main(App, Widget):
         return self
 
     def stop_app(self, *args):
+        """
+        Arrête l'envoie des données et la réception des données
+        :PRE: /
+        :POST: arrête les sockets self.receiver et self.sender, réinitialise le socket entrant à None
+        """
         self.receiver.stop_receiving()
         self.sender.stop_send_data()
         self.client_socket, self.address = None, None
@@ -56,6 +67,11 @@ class Main(App, Widget):
         Clock.schedule_once(reset_webcam)
 
     def data_receiver(self, *args):
+        """
+        Cette méthode lance la procédure pour le socket récepteur
+        :PRE: /
+        :POST: self.receiver_socket est paramétré, écoute et accepte toute connexion entrante
+        """
         self.receiver.socket_binding()
         self.receiver.socket_listening()
         print(f"LISTENING AT: {self.receiver.socket_address}")
@@ -65,8 +81,9 @@ class Main(App, Widget):
     def show_client(self, *args):
         """
         Affichage du feed video après la connexion au serveur.
-        :param args:
-        :return:
+        :param args: permet l'appel par kivy
+        :PRE: /
+        :POST: Affiche la webcam du socket client dans kivy
         """
         try:
             if self.client_socket:
@@ -98,8 +115,6 @@ class Main(App, Widget):
         """
         Cette méthode converti la frame vidéo en quelque chose de compréhensible par kivy afin de pourvoir l'afficher.
         :param frame: les données d'image reçue du client
-        :param args:
-        :return:
         """
         # display the current video frame in the kivy Image widget
         # create a Texture the correct size and format for the frame
@@ -110,19 +125,22 @@ class Main(App, Widget):
         self.image.texture = texture
 
     def set_ip(self):
+        """
+        Méthode appelé pour enregistrer l'ip introduite dans kivy
+        :PRE: /
+        :POST: change self.selected_ip par l'ip soumise
+        """
         self.selected_ip = self.inputted_ip.text
         print(self.selected_ip)
 
     def call(self):
+        """
+        Lance la réception et l'appel vidéo
+        :PRE: /
+        :POST: lance deux threads: un qui attend une connexion et l'autre qui lance un appel
+        """
         self.sender = DataSender(self.selected_ip)
         self.receiver = DataReceiver()
         threading.Thread(target=self.sender.thread).start()
         threading.Thread(target=self.data_receiver).start()
         # Clock.schedule_interval(self.load_vid, 1/64)
-
-
-"""    def load_vid(self, *args):
-        ret, frame = self.sender.vid.read()
-        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(cv2.flip(frame, 0).tobytes(), colorfmt='bgr', bufferfmt='ubyte')
-        self.face.texture = texture"""
