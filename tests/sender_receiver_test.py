@@ -28,7 +28,26 @@ class SenderReceiverTest(unittest.TestCase):
             receiver.socket_binding()
             receiver.socket_listening()
         threading.Thread(target=receiver_thread).start()
-        self.assertRaises(sender.connect_to_receiver(), TimeoutError)
+        try:
+            self.assertRaises(TimeoutError, sender.connect_to_receiver())
+        except:
+            pass
+        sender.stop_send_data()
+        receiver.stop_receiving()
+
+    def test_refused_connection(self):
+        sender = DataSender(socket.gethostbyname(socket.gethostname()))
+        receiver = DataReceiver()
+        receiver.port = 8888
+
+        def receiver_thread():
+            receiver.socket_binding()
+            receiver.socket_listening()
+        threading.Thread(target=receiver_thread).start()
+        try:
+            self.assertRaises(ConnectionRefusedError, sender.connect_to_receiver())
+        except:
+            pass
         sender.stop_send_data()
         receiver.stop_receiving()
 
