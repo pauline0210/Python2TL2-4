@@ -48,7 +48,7 @@ class Main(App, Widget):
         """
         self.inputted_ip.text = socket.gethostbyname(socket.gethostname())
         # opencv2 stuffs
-        Clock.schedule_interval(self.show_client, 1 / 64)
+        Clock.schedule_interval(self.show_client, 0)
         return self
 
     def stop_app(self, *args):
