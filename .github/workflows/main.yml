@@ -27,7 +27,7 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v2.3.1
-      - name: Python Unit Test
-        uses: Python2TL2-4/tests/sender_receiver_test.py@0.0.1
+      - name: Run unit tests
+        run: python -m pytest --import-mode=append tests/
   
       
